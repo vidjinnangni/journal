@@ -1,0 +1,35 @@
+{# Standalone page (e.g. /about). `page` and `canonical_url` are built in
+   the page() view in app.py. Reuses the post-header/post-content styles
+   for visual consistency, but has no date/category/reading-time meta row
+   since pages aren't chronological articles. #}
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} — {{ site_name }}{% endblock %}
+
+{% block keywords %}
+  {% if page.keywords %}<meta name="keywords" content="{{ page.keywords }}">{% endif %}
+{% endblock %}
+
+{% block og_extra %}
+  {% if page.image %}<meta property="og:image" content="{{ page.image }}">{% endif %}
+{% endblock %}
+
+{% block twitter_card %}{{ "summary_large_image" if page.image else "summary" }}{% endblock %}
+
+{% block content %}
+  <article>
+    <header class="post-header reveal">
+      <a class="back-link" href="{{ url_for('index') }}">&larr; Retour à l'accueil</a>
+      <h1>{{ page.title }}</h1>
+    </header>
+    {% if page.image %}
+      <img src="{{ page.image }}" alt="{{ page.title }}" class="post-cover reveal" loading="eager">
+    {% endif %}
+    <div class="post-content">
+      {# page.html is Markdown converted to HTML in app.py (get_page); marked
+         |safe to disable autoescaping. Only safe as long as pages/*.md are
+         written by a trusted author — never render untrusted content this way. #}
+      {{ page.html | safe }}
+    </div>
+  </article>
+{% endblock %}

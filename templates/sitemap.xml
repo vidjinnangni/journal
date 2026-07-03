@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{# `pages` is built in app.py's sitemap() view: homepage, every category
+   page, then every article (with a lastmod date, unlike the other two). #}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for page in pages %}
+  <url>
+    <loc>{{ page.loc }}</loc>
+    {% if page.lastmod %}<lastmod>{{ page.lastmod }}</lastmod>{% endif %}
+  </url>
+{% endfor %}
+</urlset>

@@ -1,0 +1,49 @@
+{# Single article page. `post`, `canonical_url` and `structured_data` are
+   built in the post() view in app.py. #}
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} — {{ site_name }}{% endblock %}
+
+{% block keywords %}
+  {% if post.keywords %}<meta name="keywords" content="{{ post.keywords }}">{% endif %}
+{% endblock %}
+
+{% block og_type %}article{% endblock %}
+
+{% block og_extra %}
+  <meta property="article:published_time" content="{{ post.date.isoformat() }}">
+  <meta property="article:section" content="{{ post.category }}">
+  {% if post.image %}<meta property="og:image" content="{{ post.image }}">{% endif %}
+{% endblock %}
+
+{% block twitter_card %}{{ "summary_large_image" if post.image else "summary" }}{% endblock %}
+
+{# schema.org BlogPosting JSON-LD, built in app.py's post() view. #}
+{% block structured_data %}
+  <script type="application/ld+json">{{ structured_data | tojson }}</script>
+{% endblock %}
+
+{% block content %}
+  <article>
+    <header class="post-header reveal">
+      <a class="back-link" href="{{ url_for('index') }}">&larr; Tous les articles</a>
+      <h1>{{ post.title }}</h1>
+      <div class="post-meta">
+        <a class="category-pill" href="{{ url_for('category', slug=post.category_slug) }}">{{ post.category }}</a>
+        <span class="dot"></span>
+        <span>{{ post.date | french_date }}</span>
+        <span class="dot"></span>
+        <span>{{ post.reading_time }} min de lecture</span>
+      </div>
+    </header>
+    {% if post.image %}
+      <img src="{{ post.image }}" alt="{{ post.title }}" class="post-cover reveal" loading="eager">
+    {% endif %}
+    <div class="post-content">
+      {# post.html is Markdown converted to HTML in app.py (get_post); marked
+         |safe to disable autoescaping. Only safe as long as posts/*.md are
+         written by a trusted author — never render untrusted content this way. #}
+      {{ post.html | safe }}
+    </div>
+  </article>
+{% endblock %}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Swap static/img/favicon.svg (or edit it directly) to change the icon. -->
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+  <!--
+    Apply any stored theme choice before the stylesheet paints, so a
+    visitor who picked dark mode never sees a flash of the light theme.
+    Must stay inline and this early; an external/deferred script would
+    run too late.
+  -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored) document.documentElement.setAttribute("data-theme", stored);
+    })();
+  </script>
+  <title>{% block title %}{{ site_name }}{% endblock %}</title>
+  <meta name="description" content="{{ meta_description | default(site_tagline) }}">
+  {% block keywords %}{% endblock %}
+  <link rel="canonical" href="{{ canonical_url | default(request.url_root) }}">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph tags: child templates override og_type/og_title/og_extra as needed. -->
+  <meta property="og:site_name" content="{{ site_name }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+  <meta property="og:description" content="{{ meta_description | default(site_tagline) }}">
+  <meta property="og:url" content="{{ canonical_url | default(request.url_root) }}">
+  {% block og_extra %}{% endblock %}
+
+  <meta name="twitter:card" content="{% block twitter_card %}summary{% endblock %}">
+  <meta name="twitter:title" content="{{ self.og_title() }}">
+  <meta name="twitter:description" content="{{ meta_description | default(site_tagline) }}">
+
+  <!-- schema.org JSON-LD, filled in by post.html for article pages. -->
+  {% block structured_data %}{% endblock %}
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- Lets CSS distinguish "JS is available" from "JS is disabled/blocked",
+       see the has-js-gated scroll-reveal rules in style.css. -->
+  <script>document.documentElement.classList.add("has-js")</script>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <!-- Swap static/img/logo.svg (or edit it directly) to change the logo. -->
+      <a class="nav-brand" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="{{ site_name }}" class="nav-logo">
+      </a>
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}">Articles</a>
+        <!-- Manual link to the demo page/about/ folder; add one per page
+             you create under pages/, there's no automatic nav generation. -->
+        <a href="{{ url_for('page', slug='about') }}">À propos</a>
+        <!-- Both icons are always in the DOM; CSS shows only the one that
+             matches the current theme (see static/js/main.js for the click
+             handler that sets data-theme, and its aria-label logic). -->
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Activer le mode sombre">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <!-- Remplacer les href="#" par les vraies URLs des profils -->
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+          </svg>
+        </a>
+      </div>
+      <p>&copy; {{ site_name }}. Fait avec Flask &amp; Markdown.</p>
+    </div>
+  </footer>
+
+  <!-- Hidden until scrolled past a threshold; see static/js/main.js. -->
+  <button id="back-to-top" class="back-to-top" type="button" aria-label="Retour en haut de la page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5" />
+      <path d="M5 12l7-7 7 7" />
+    </svg>
+  </button>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

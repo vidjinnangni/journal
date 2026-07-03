@@ -1,0 +1,12 @@
+{# Rendered by app.py's not_found() error handler for any unmatched route. #}
+{% extends "base.html" %}
+
+{% block title %}Page introuvable — {{ site_name }}{% endblock %}
+
+{% block content %}
+  <section class="not-found reveal">
+    <h1>404</h1>
+    <p>Cette page n'existe pas.</p>
+    <a href="{{ url_for('index') }}">&larr; Retour à l'accueil</a>
+  </section>
+{% endblock %}
