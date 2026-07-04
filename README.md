@@ -43,7 +43,7 @@ A minimalist blog engine built with Flask and Markdown. Minimalist design, light
 
 ## Getting started
 
-Requires Python 3.9+.
+Requires Python 3.10+.
 
 ```bash
 git clone https://github.com/<your-username>/<your-repo>.git
