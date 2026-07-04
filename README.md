@@ -2,7 +2,7 @@
 
 A minimalist blog engine built with Flask and Markdown. Minimalist design, light/dark theme, no database. Every article and page is just a folder with a Markdown file.
 
-![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Flask](https://img.shields.io/badge/flask-3.0-black)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
